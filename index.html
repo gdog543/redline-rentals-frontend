@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redline Rentals</title>
+  <meta name="description" content="Modern car rental platform with user accounts." />
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --card: #141414;
+      --text: #ffffff;
+      --muted: #b3b3b3;
+      --accent: #e10600;
+      --accent-2: #ff4d4d;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--bg); color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    header {
+      position: sticky; top: 0;
+      background: rgba(0,0,0,.8);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #222;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+    nav { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 22px; font-weight: 900; color: var(--accent); }
+    .nav-links { display: flex; gap: 16px; }
+    .btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff; padding: 10px 16px;
+      border-radius: 10px; border: none;
+      font-weight: 700; cursor: pointer;
+    }
+    .btn.secondary { background: transparent; border: 1px solid var(--accent); }
+    .hero {
+      display: grid; grid-template-columns: 1.2fr .8fr;
+      gap: 24px; padding: 60px 0;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid #222;
+      border-radius: 16px;
+      padding: 20px;
+    }
+    h1 { font-size: clamp(32px, 4vw, 48px); margin: 0 0 10px; }
+    p { color: var(--muted); line-height: 1.6; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    input {
+      width: 100%; padding: 10px; margin-bottom: 10px;
+      border-radius: 10px; border: 1px solid #333;
+      background: #000; color: #fff;
+    }
+    footer { border-top: 1px solid #222; margin-top: 40px; }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <nav>
+      <div class="logo">Redline Rentals</div>
+      <div class="nav-links">
+        <a href="#cars">Cars</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <button class="btn" onclick="toggleAuth()">Login / Sign Up</button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div class="card">
+      <h1>Rent Performance & Luxury Cars</h1>
+      <p>Book premium vehicles in minutes.</p>
+      <button class="btn">Browse Cars</button>
+    </div>
+
+    <div class="card" id="authBox" style="display:none;">
+      <h3>User Account</h3>
+      <input id="email" placeholder="Email" />
+      <input id="password" type="password" placeholder="Password" />
+      <button class="btn" onclick="login()">Login</button>
+      <button class="btn secondary" onclick="register()">Create Account</button>
+      <p id="authMsg"></p>
+    </div>
+  </section>
+
+  <section id="cars" class="card">
+    <h2>Available Cars</h2>
+    <div class="grid">
+      <div class="card"><h3>BMW M4</h3><p>$180/day</p></div>
+      <div class="card"><h3>Dodge Hellcat</h3><p>$220/day</p></div>
+      <div class="card"><h3>Lamborghini Huracán</h3><p>$950/day</p></div>
+    </div>
+  </section>
+
+  <section id="contact" class="card">
+    <h2>Contact</h2>
+    <p>Email: support@redlinerentals.com</p>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <p style="color:var(--muted)">© <span id="year"></span> Redline Rentals</p>
+  </div>
+</footer>
+
+<script>
+  const API = 'https://YOUR-BACKEND.onrender.com';
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  function toggleAuth() {
+    const box = document.getElementById('authBox');
+    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+  }
+
+  async function login() {
+    const res = await fetch(API + '/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.value, password: password.value })
+    });
+    const data = await res.json();
+    authMsg.textContent = data.message;
+  }
+
+  async function register() {
+    const res = await fetch(API + '/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.value, password: password.value })
+    });
+    const data = await res.json();
+    authMsg.textContent = data.message;
+  }
+</script>
+
+</body>
+</html>
